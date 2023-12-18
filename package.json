@@ -1,0 +1,29 @@
+{
+  "name": "crud-api",
+  "version": "1.0.0",
+  "description": "This project is about CRUD APIs using in-memory database.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start:multi": "node app.js",
+    "start:loadBalancer": "node loadBalancer.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khedekarps/crud-api.git"
+  },
+  "author": "Pragati Khedekar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/khedekarps/crud-api/issues"
+  },
+  "homepage": "https://github.com/khedekarps/crud-api#readme",
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "http-proxy": "^1.18.1",
+    "mongoose": "^8.0.3",
+    "nodemon": "^3.0.2",
+    "uuid": "^9.0.1"
+  }
+}
