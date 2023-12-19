@@ -2,7 +2,7 @@ const express = require("express");
 var userRouter = express.Router();
 const userController = require('./user.controller');
 
-userRouter.get('/', (request, response) => {
+userRouter.get('', (request, response) => {
     userController.getAllUsers(request, response);
 });
 
@@ -10,7 +10,7 @@ userRouter.get('/:userId', (request, response) => {
     userController.getUserById(request, response);
 });
 
-userRouter.post('/', (request, response) => {
+userRouter.post('', (request, response) => {
     userController.createUser(request, response);
 });
 

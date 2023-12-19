@@ -7,16 +7,21 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const { Worker } = require('worker_threads');
 const dotenv = require('dotenv');
+var cors = require('cors');
+var routes = require('./routes');
 
 dotenv.config();
 
 const app = express();
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use('/api', cors(), routes);
+app.use(cors());
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(error => console.error('Error connecting to MongoDB:', error));
+    .then(() => console.log('Connected to MongoDB'))
+    .catch(error => console.error('Error connecting to MongoDB:', error));
 
 // In-memory database
 const database = {};
@@ -36,15 +41,11 @@ app.use((err, req, res, next) => {
 // Request validation middleware
 const validateRequest = (req, res, next) => {
     if (!req.body || Object.keys(req.body).length === 0) {
-      res.status(400).send('Bad Request: Request body is required');
+        res.status(400).send('Bad Request: Request body is required');
     } else {
-      next();
+        next();
     }
-  };
-  
-//   app.get('/api', (req, res) => {
-//     res.json(Object.values(database));
-//   });
+};
 
 if (cluster.isMaster) {
     console.log(`Master ${process.pid} is running`);

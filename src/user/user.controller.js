@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 
 exports.getAllUsers = async (req, res) => {
     try {
-        const users = await UserModel.find();
+        const users = await userModel.default.find();
         return res.status(201).json({ message: users });
       } catch (error) {
         console.error(error);
@@ -17,7 +17,7 @@ exports.getUserById = async (req, res) => {
             return res.status(400).json({ message: 'userId field required in request params.'});
         }
         const userId = req.params.userId;
-      const user = await UserModel.findOne({ id: userId });
+      const user = await userModel.default.findOne({ id: userId });
       if (user) {
         return res.status(200).json({ data: user });
       } else {
@@ -36,7 +36,14 @@ exports.createUser = async (req, res) => {
         }
     const userId = uuidv4();
     const userData = req.body;
-    const user = await userModel.create({ id: userId, data: userData });
+    const newUser = new userModel.default({
+        username: userData.username,
+        age: userData.age,
+        hobbies: userData.hobbies,
+        id: userId
+      });
+  
+      const user = await newUser.save();
     return res.status(200).json({data: user});
     } catch (error) {
     console.error(error);
@@ -54,7 +61,7 @@ exports.updateUserById = async (req, res) => {
         }
         const userId = req.params.userId;
         const updatedUserData = req.body;
-      const user = await UserModel.findByIdAndUpdate(userId, updatedUserData, { new: true });
+      const user = await userModel.default.findByIdAndUpdate(userId, updatedUserData, { new: true });
       if (user) {
         return res.status(200).json({data: user});
       } else {
@@ -72,7 +79,7 @@ exports.deleteUserById = async (req, res) => {
             return res.status(400).json({ message: 'userId field required in request params.'});
         }
         const userId = req.params.userId;
-      const deletedUser = await UserModel.findByIdAndDelete({ id: userId });
+      const deletedUser = await userModel.default.findByIdAndDelete({ id: userId });
       if (!deletedUser) {
         return res.status(404).json({ message: 'User not found' });
       }
