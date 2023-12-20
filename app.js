@@ -9,6 +9,7 @@ const { Worker } = require('worker_threads');
 const dotenv = require('dotenv');
 var cors = require('cors');
 var routes = require('./routes');
+const port = process.env.PORT || 4000;
 
 dotenv.config();
 
@@ -30,9 +31,9 @@ const database = {};
 const syncWorker = new Worker('./dbSync.js', { workerData: database });
 
 app.use((req, res, next) => {
-    res.status(404).send('Not Found');
-});
-
+    res.status(404).json({ error: 'Not Found', message: 'The requested resource does not exist.' });
+  });
+  
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Internal Server Error');
@@ -58,7 +59,7 @@ if (cluster.isMaster) {
         console.log(`Worker ${worker.process.pid} died`);
     });
 } else {
-    app.listen(4000 + cluster.worker.id, () => {
-        console.log(`Worker ${process.pid} started on port ${4000 + cluster.worker.id}`);
+    app.listen(Number(port) + cluster.worker.id, () => {
+        console.log(`Worker ${process.pid} started on port ${Number(port) + cluster.worker.id}`);
     });
 }
